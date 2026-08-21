@@ -14,7 +14,11 @@ import {
 import { selectCurrentUserAccountId } from '@/store/auth/authSelectors';
 import { clearSearchResults, prepareNewSearch, setQuery } from '@/store/search/searchSlice';
 import { RecentSearches } from '../utils/recentSearches';
-import { SEARCH_SECTION_IDS, type SearchItem, type SearchSectionType } from '@/store/search/searchTypes';
+import {
+  SEARCH_SECTION_IDS,
+  type SearchItem,
+  type SearchSectionType,
+} from '@/store/search/searchTypes';
 import { SEARCH_SECTIONS } from '@/screens/search/config';
 
 const VALID_TAB_IDS = new Set<string>(['all', ...SEARCH_SECTION_IDS]);
@@ -304,7 +308,6 @@ export function useSearchScreen() {
     });
     return data;
   }, [sectionData]);
-
 
   const createEndReachedHandler = useCallback(
     (sectionId: SearchSectionType) => {

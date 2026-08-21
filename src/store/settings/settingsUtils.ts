@@ -63,9 +63,7 @@ export const getAllowedInstallationUrls = ({ url }: { url: string }) => {
   }
 
   if (!isDevevInstallationUrl(url)) {
-    throw new Error(
-      `${DEVEV_CONFIG.PRODUCT_NAME} connects only to ${DEVEV_CONFIG.SERVER_HOST}.`,
-    );
+    throw new Error(`${DEVEV_CONFIG.PRODUCT_NAME} connects only to ${DEVEV_CONFIG.SERVER_HOST}.`);
   }
 
   return DEVEV_INSTALLATION;
