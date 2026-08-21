@@ -57,7 +57,22 @@ jobs:
         run: pnpm run typecheck
 
       - name: Test
-        run: pnpm test -- --maxWorkers=2
+        id: tests
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm test -- --maxWorkers=2 2>&1 | tee /tmp/devev-jest-output.log
+
+      - name: Publish test failure summary
+        if: ${{ failure() && steps.tests.outcome == 'failure' }}
+        shell: bash
+        run: |
+          {
+            echo '### Jest failure'
+            echo '```text'
+            tail -n 300 /tmp/devev-jest-output.log
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Branding audit
         run: pnpm run audit:branding
