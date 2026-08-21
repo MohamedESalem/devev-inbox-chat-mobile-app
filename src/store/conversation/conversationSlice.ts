@@ -89,7 +89,10 @@ const preserveLocalStatus = (
   existingConversation: Conversation | undefined,
   incomingConversation: Conversation,
 ) => {
-  if (!shouldKeepLocalStatusMarker(existingConversation, incomingConversation)) {
+  if (
+    !existingConversation ||
+    !shouldKeepLocalStatusMarker(existingConversation, incomingConversation)
+  ) {
     return {
       ...incomingConversation,
       localStatusUpdatedAt: undefined,

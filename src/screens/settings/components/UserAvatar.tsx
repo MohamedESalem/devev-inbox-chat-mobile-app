@@ -50,7 +50,7 @@ const AvatarImage = ({
   src,
   handleFallback,
 }: {
-  src: ImageSourcePropType;
+  src: string | ImageSourcePropType;
   handleFallback: () => void;
 }) => {
   return (

@@ -141,11 +141,11 @@ export const getLastEmailInSelectedChat = createDraftSafeSelector(
       return undefined;
     }
     const lastEmail = [...conversation.messages].reverse().find(message => {
-      const { contentAttributes = {}, messageType } = message;
-      const { email = {} } = contentAttributes || {};
+      const { contentAttributes, messageType } = message;
+      const email = contentAttributes?.email;
       const isIncomingOrOutgoing =
         messageType === MESSAGE_TYPES.OUTGOING || messageType === MESSAGE_TYPES.INCOMING;
-      if (email.from && isIncomingOrOutgoing) {
+      if (email?.from && isIncomingOrOutgoing) {
         return true;
       }
       return false;

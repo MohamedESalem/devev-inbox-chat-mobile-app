@@ -45,5 +45,5 @@ export function transformSearchConversation(conversation: unknown): Conversation
     transformed.inboxId = inbox.id;
   }
 
-  return transformed as Conversation;
+  return transformed as unknown as Conversation;
 }
