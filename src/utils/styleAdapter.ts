@@ -1,10 +1,4 @@
-import {
-  Falsy,
-  PressableStateCallbackType,
-  StyleProp,
-  StyleSheet,
-  ViewStyle,
-} from 'react-native';
+import { Falsy, PressableStateCallbackType, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 
 /**
  * "If the type of the value is a function, then return true, otherwise return false."
