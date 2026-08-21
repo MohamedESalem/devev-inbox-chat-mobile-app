@@ -143,18 +143,18 @@ export const AddParticipantList = (props: AddParticipantListProps) => {
           style={({ pressed }) => [
             tailwind.style(
               'rounded-b-[13px]',
-              pressed ? 'bg-blue-100' : '',
+              pressed ? 'bg-brand-100' : '',
               isRemovingParticipant ? 'opacity-50' : '',
             ),
           ]}>
           <Animated.View style={tailwind.style('flex flex-row items-center ml-3')}>
             <Animated.View style={tailwind.style('p-0.5')}>
-              <Icon icon={<AddParticipant stroke={tailwind.color('text-blue-800')} />} size={24} />
+              <Icon icon={<AddParticipant stroke={tailwind.color('text-brand-800')} />} size={24} />
             </Animated.View>
             <Animated.View style={tailwind.style('flex-1 py-[11px] ml-2')}>
               <Animated.Text
                 style={tailwind.style(
-                  'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-blue-800',
+                  'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-brand-800',
                 )}>
                 {i18n.t('CONVERSATION_PARTICIPANTS.ADD_PARTICIPANT')}
               </Animated.Text>

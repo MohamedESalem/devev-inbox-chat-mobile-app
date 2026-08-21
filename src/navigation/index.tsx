@@ -12,7 +12,7 @@ import i18n from 'i18n';
 import { navigationRef } from '@/utils/navigationUtils';
 import { findConversationLinkFromPush, findNotificationFromFCM } from '@/utils/pushUtils';
 import { extractConversationIdFromUrl } from '@/utils/conversationUtils';
-import { useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@/hooks';
 import { selectInstallationUrl, selectLocale } from '@/store/settings/settingsSelectors';
 import { selectCurrentUserAccountId } from '@/store/auth/authSelectors';
 import { resolveAccountSwitch, switchAccount } from '@/utils/accountUtils';
@@ -22,7 +22,7 @@ import { RefsProvider } from '@/context';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { transformNotification } from '@/utils/camelCaseKeys';
 import { SsoUtils } from '@/utils/ssoUtils';
-import { useAppDispatch } from '@/hooks';
+import { DEVEV_CONFIG, isDevevDeepLink } from '@/config/devev';
 import Inter40020 from '@/assets/fonts/Inter-400-20.ttf';
 import Inter42020 from '@/assets/fonts/Inter-420-20.ttf';
 import Inter50024 from '@/assets/fonts/Inter-500-24.ttf';
@@ -50,7 +50,7 @@ export const AppNavigationContainer = () => {
   const currentAccountId = useAppSelector(selectCurrentUserAccountId);
 
   const linking = {
-    prefixes: [installationUrl, SSO_CALLBACK_URL],
+    prefixes: [installationUrl, DEVEV_CONFIG.SERVER_URL, SSO_CALLBACK_URL],
     config: {
       screens: {
         ChatScreen: {
@@ -69,7 +69,7 @@ export const AppNavigationContainer = () => {
     getStateFromPath: (path: string, config: any) => {
       // Handle SSO callback - App running, receives deep link
       if (path.includes(SSO_CALLBACK_URL) || path.includes('auth/saml')) {
-        const ssoParams = SsoUtils.parseCallbackUrl(`chatwootapp://${path}`);
+        const ssoParams = SsoUtils.parseCallbackUrl(`${DEVEV_CONFIG.URL_SCHEME}://${path}`);
         // Handle both success and error cases
         SsoUtils.handleSsoCallback(ssoParams, dispatch);
         // Return undefined to prevent navigation change for SSO callback
@@ -121,6 +121,9 @@ export const AppNavigationContainer = () => {
       const url = await Linking.getInitialURL();
 
       if (url != null) {
+        if (!isDevevDeepLink(url)) {
+          return undefined;
+        }
         // Handle SSO callback - App starting up from deep link
         if (url.includes(SSO_CALLBACK_URL)) {
           const ssoParams = SsoUtils.parseCallbackUrl(url);
@@ -150,6 +153,9 @@ export const AppNavigationContainer = () => {
     // subscribe: App backgrounded, receives deep link - handles SSO callbacks and push notifications
     subscribe(listener: (arg0: string) => void) {
       const onReceiveURL = ({ url }: { url: string }) => {
+        if (!isDevevDeepLink(url)) {
+          return;
+        }
         // Handle SSO callback - App backgrounded, receives deep link
         if (url.includes(SSO_CALLBACK_URL)) {
           const ssoParams = SsoUtils.parseCallbackUrl(url);

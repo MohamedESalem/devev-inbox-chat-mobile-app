@@ -1,10 +1,8 @@
 import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Animated, StatusBar, TextInput, View } from 'react-native';
-import * as Application from 'expo-application';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, Icon } from '@/components-next';
-import { URL_WITHOUT_HTTP_REGEX } from '@/constants';
 import { LinkIcon } from '@/svg-icons';
 import { tailwind } from '@/theme';
 import i18n from '@/i18n';
@@ -12,15 +10,15 @@ import { useAppSelector, useAppDispatch } from '@/hooks';
 import { selectBaseUrl } from '@/store/settings/settingsSelectors';
 import { resetSettings } from '@/store/settings/settingsSlice';
 import { settingsActions } from '@/store/settings/settingsActions';
+import { DEVEV_CONFIG, isServerOverrideEnabled } from '@/config/devev';
 
 type FormData = {
   url: string;
 };
 
-const appName = Application.applicationName;
-
 const ConfigURLScreen = () => {
   const baseUrl = useAppSelector(selectBaseUrl);
+  const canOverrideServer = isServerOverrideEnabled();
 
   const dispatch = useAppDispatch();
 
@@ -30,7 +28,7 @@ const ConfigURLScreen = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      url: baseUrl ? baseUrl : appName === 'Chatwoot' ? 'app.chatwoot.com' : '',
+      url: baseUrl ? baseUrl : DEVEV_CONFIG.SERVER_HOST,
     },
   });
 
@@ -40,7 +38,7 @@ const ConfigURLScreen = () => {
 
   const onSubmit = async (data: FormData) => {
     const { url } = data;
-    if (url) {
+    if (url && canOverrideServer) {
       dispatch(settingsActions.setInstallationUrl(url));
     }
   };
@@ -73,10 +71,6 @@ const ConfigURLScreen = () => {
             control={control}
             rules={{
               required: i18n.t('CONFIGURE_URL.URL_REQUIRED'),
-              pattern: {
-                value: URL_WITHOUT_HTTP_REGEX,
-                message: i18n.t('CONFIGURE_URL.URL_ERROR'),
-              },
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <View style={tailwind.style('pt-8 mb-8 gap-2')}>
@@ -91,6 +85,7 @@ const ConfigURLScreen = () => {
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
+                  editable={canOverrideServer}
                   placeholderTextColor={tailwind.color('text-gray-900')}
                   keyboardType="email-address"
                   autoCapitalize="none"
@@ -105,7 +100,11 @@ const ConfigURLScreen = () => {
             name="url"
           />
 
-          <Button text={i18n.t('CONFIGURE_URL.CONNECT')} handlePress={handleSubmit(onSubmit)} />
+          <Button
+            text={i18n.t('CONFIGURE_URL.CONNECT')}
+            handlePress={handleSubmit(onSubmit)}
+            disabled={!canOverrideServer}
+          />
         </Animated.ScrollView>
       </View>
     </SafeAreaView>

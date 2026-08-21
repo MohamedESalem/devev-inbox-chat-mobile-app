@@ -3,8 +3,9 @@ import { settingsActions } from './settingsActions';
 import * as RootNavigation from '@/utils/navigationUtils';
 import { NotificationSettings } from './settingsTypes';
 import { Theme } from '@/types/common/Theme';
+import { DEVEV_INSTALLATION } from '@/config/devev';
 
-interface SettingsState {
+export interface SettingsState {
   baseUrl: string;
   installationUrl: string;
   uiFlags: {
@@ -19,9 +20,8 @@ interface SettingsState {
   version: string;
   pushToken: string;
 }
-const initialState: SettingsState = {
-  baseUrl: 'app.chatwoot.com',
-  installationUrl: 'https://app.chatwoot.com/',
+export const getInitialSettingsState = (): SettingsState => ({
+  ...DEVEV_INSTALLATION,
   uiFlags: {
     isSettingUrl: false,
     isUpdating: false,
@@ -37,11 +37,27 @@ const initialState: SettingsState = {
     selected_push_flags: [],
     user_id: 0,
   },
-  webSocketUrl: 'wss://app.chatwoot.com/cable',
   theme: 'system',
   version: '',
   pushToken: '',
+});
+
+export const sanitizeSettingsState = (settings?: Partial<SettingsState>): SettingsState => {
+  const initialState = getInitialSettingsState();
+  return {
+    ...initialState,
+    ...settings,
+    ...DEVEV_INSTALLATION,
+    uiFlags: {
+      ...initialState.uiFlags,
+      ...settings?.uiFlags,
+      isSettingUrl: false,
+      isUpdating: false,
+    },
+  };
 };
+
+const initialState: SettingsState = getInitialSettingsState();
 export const settingsSlice = createSlice({
   name: 'settings',
   initialState,
@@ -69,8 +85,9 @@ export const settingsSlice = createSlice({
       })
       .addCase(settingsActions.setInstallationUrl.rejected, state => {
         state.uiFlags.isSettingUrl = false;
-        state.installationUrl = '';
-        state.baseUrl = '';
+        state.installationUrl = DEVEV_INSTALLATION.installationUrl;
+        state.baseUrl = DEVEV_INSTALLATION.baseUrl;
+        state.webSocketUrl = DEVEV_INSTALLATION.webSocketUrl;
       })
       .addCase(settingsActions.getNotificationSettings.fulfilled, (state, action) => {
         state.notificationSettings = action.payload;

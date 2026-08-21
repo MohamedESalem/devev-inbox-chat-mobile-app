@@ -157,7 +157,7 @@ export const DeliveryStatus = (props: DeliveryStatusProps) => {
   if (showReadIndicator()) {
     return (
       <Icon
-        icon={<DoubleCheckIcon renderSecondTick stroke={tailwind.color('text-blue-800')} />}
+        icon={<DoubleCheckIcon renderSecondTick stroke={tailwind.color('text-brand-800')} />}
         size={14}
       />
     );

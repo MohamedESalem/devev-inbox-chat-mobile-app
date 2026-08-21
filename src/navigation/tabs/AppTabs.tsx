@@ -40,6 +40,7 @@ import { clearAllDeliveredNotifications } from '@/utils/pushUtils';
 import { dashboardAppActions } from '@/store/dashboard-app/dashboardAppActions';
 import { customAttributeActions } from '@/store/custom-attribute/customAttributeActions';
 import { clearSelection } from '@/store/conversation/conversationSelectedSlice';
+import { DEFAULT_AUTHENTICATED_TAB } from '@/navigation/navigationDefaults';
 
 const Tab = createBottomTabNavigator();
 
@@ -160,6 +161,7 @@ const Tabs = () => {
   const hasConversationPermission = CONVERSATION_PERMISSIONS.some(permission =>
     userPermissions.includes(permission),
   );
+  const initialRouteName = hasConversationPermission ? DEFAULT_AUTHENTICATED_TAB : 'Settings';
 
   const checkAppVersion = useCallback(async () => {
     if (chatwootVersion) {
@@ -176,7 +178,7 @@ const Tabs = () => {
   }, []);
 
   return (
-    <Tab.Navigator tabBar={CustomTabBar} initialRouteName="Inbox">
+    <Tab.Navigator tabBar={CustomTabBar} initialRouteName={initialRouteName}>
       {hasConversationPermission && (
         <Tab.Screen name="Inbox" component={InboxStack} options={{ headerShown: false }} />
       )}

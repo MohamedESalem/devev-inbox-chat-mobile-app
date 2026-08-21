@@ -57,7 +57,7 @@ const TemplateMediaInputField = ({
         keyboardType={keyboardType}
         style={tailwind.style(
           'px-3 py-2 rounded-[10px] border text-base font-inter-420-20 text-gray-950',
-          isFocused ? 'border-blue-700' : 'border-blackA-A4',
+          isFocused ? 'border-brand-700' : 'border-blackA-A4',
         )}
       />
       {showPreview && (

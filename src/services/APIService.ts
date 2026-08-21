@@ -11,6 +11,12 @@ import { Platform } from 'react-native';
 import { getStore } from '@/store/storeAccessor';
 import I18n from '@/i18n';
 import { showToast } from '@/utils/toastUtils';
+import {
+  DEVEV_CONFIG,
+  DEVEV_INSTALLATION,
+  isDevevInstallationUrl,
+  isServerOverrideEnabled,
+} from '@/config/devev';
 
 const nonAccountRoutes = [
   'profile',
@@ -29,7 +35,7 @@ const isForPreviousAccount = (url?: string): boolean => {
   );
 };
 
-const CLIENT_NAME = 'Chatwoot Mobile';
+const CLIENT_NAME = DEVEV_CONFIG.PRODUCT_NAME;
 const CLIENT_VERSION = Constants.expoConfig?.version ?? 'unknown';
 
 function deviceHeaders(): Record<string, string> {
@@ -81,7 +87,11 @@ class APIService {
         const headers = this.getHeaders();
         const store = getStore();
         const state = store.getState();
-        config.baseURL = state.settings?.installationUrl;
+        const installationUrl = state.settings?.installationUrl;
+        config.baseURL =
+          installationUrl && (isDevevInstallationUrl(installationUrl) || isServerOverrideEnabled())
+            ? installationUrl
+            : DEVEV_INSTALLATION.installationUrl;
         const accountId = state.auth.user?.account_id;
         if (accountId && config.url && !nonAccountRoutes.includes(config.url)) {
           config.url = `api/v1/accounts/${accountId}/${config.url}`;

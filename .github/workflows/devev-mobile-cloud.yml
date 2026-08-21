@@ -1,0 +1,138 @@
+name: DEVEV Mobile Cloud Validation
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_target:
+        description: Validation only or the EAS build to trigger after validation
+        required: true
+        default: validate-only
+        type: choice
+        options:
+          - validate-only
+          - android-preview
+          - android-production
+          - ios-preview
+          - ios-production
+
+permissions:
+  contents: read
+
+env:
+  CI: true
+  EXPO_PUBLIC_APP_SLUG: devev-inbox
+  EXPO_PUBLIC_EXPO_OWNER: ${{ vars.EXPO_OWNER }}
+  EXPO_PUBLIC_PROJECT_ID: ${{ vars.EXPO_PROJECT_ID }}
+  EXPO_PUBLIC_DEVEV_ENABLE_SSO: ${{ vars.EXPO_PUBLIC_DEVEV_ENABLE_SSO }}
+  EXPO_PUBLIC_DEVEV_ALLOW_SERVER_OVERRIDE: false
+  EXPO_PUBLIC_MINIMUM_CHATWOOT_VERSION: 4.1.0
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 10.11.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 20.9.0
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Type check
+        run: pnpm run typecheck
+
+      - name: Test
+        run: pnpm test -- --maxWorkers=2
+
+      - name: Branding audit
+        run: pnpm run audit:branding
+
+      - name: Secret audit
+        run: pnpm run audit:secrets
+
+      - name: Resolve Expo config
+        run: pnpm exec expo config --type public > /tmp/devev-expo-config.json
+
+  eas-build:
+    name: Trigger EAS Build
+    runs-on: ubuntu-latest
+    needs: validate
+    if: ${{ inputs.build_target != 'validate-only' }}
+    env:
+      ANDROID_GOOGLE_SERVICES_JSON_B64: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON_B64 }}
+      IOS_GOOGLE_SERVICE_INFO_PLIST_B64: ${{ secrets.IOS_GOOGLE_SERVICE_INFO_PLIST_B64 }}
+      EXPO_PUBLIC_ANDROID_GOOGLE_SERVICES_FILE: ./google-services.json
+      EXPO_PUBLIC_IOS_GOOGLE_SERVICES_FILE: ./GoogleService-Info.plist
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 10.11.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 20.9.0
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Inject Firebase config
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "${{ inputs.build_target }}" in
+            android-*)
+              test -n "$ANDROID_GOOGLE_SERVICES_JSON_B64"
+              printf '%s' "$ANDROID_GOOGLE_SERVICES_JSON_B64" | base64 --decode > google-services.json
+              ;;
+            ios-*)
+              test -n "$IOS_GOOGLE_SERVICE_INFO_PLIST_B64"
+              printf '%s' "$IOS_GOOGLE_SERVICE_INFO_PLIST_B64" | base64 --decode > GoogleService-Info.plist
+              ;;
+          esac
+
+      - name: Trigger selected EAS build
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "${{ inputs.build_target }}" in
+            android-preview)
+              eas build --platform android --profile preview --non-interactive --no-wait
+              ;;
+            android-production)
+              eas build --platform android --profile production --non-interactive --no-wait
+              ;;
+            ios-preview)
+              eas build --platform ios --profile preview --non-interactive --no-wait
+              ;;
+            ios-production)
+              eas build --platform ios --profile production --non-interactive --no-wait
+              ;;
+          esac

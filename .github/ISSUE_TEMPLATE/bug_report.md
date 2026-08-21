@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-Confirm you’re filing a new issue. [Search issues in Github](https://github.com/chatwoot/chatwoot-mobile-app/issues) and ensure that the issue is not already exist.
+Confirm you are filing a new issue. Search existing issues first and ensure that the issue does not already exist.
 
 **Describe the bug**
 
@@ -32,11 +32,11 @@ What did you see happen? Please include relevant error messages, screenshots and
 
 **Environment**
 
-  - Describe whether you are using Chatwoot Cloud (app.chatwoot.com) or a self hosted installation of Chatwoot.
+  - DEVEV Inbox server URL: `https://chat.inbox.devev.net`
   - Device Name:  [e.g. iPhone6]
   - OS Version: [e.g. iOS8.1]
-  - Chatwoot App Version: [e.g. 1.2.0]
-  - Chatwoot Server Version: [e.g. 1.16.0]
+  - DEVEV Inbox App Version: [e.g. 1.2.0]
+  - DEVEV Inbox Server Version: [e.g. 4.1.0]
 
 **Additional context**
 

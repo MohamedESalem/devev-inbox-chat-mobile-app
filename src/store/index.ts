@@ -13,13 +13,14 @@ import {
 import { appReducer } from '@/store/reducers';
 import { setStore } from './storeAccessor';
 import { contactListenerMiddleware } from './contact/contactListener';
+import { sanitizeSettingsState } from './settings/settingsSlice';
 
 // Disable this in testing environment
 const shouldLoadDebugger = __DEV__ && !process.env.JEST_WORKER_ID;
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const reactotronInstance = shouldLoadDebugger ? require('../../ReactotronConfig').default : null;
 
-const CURRENT_VERSION = 2;
+const CURRENT_VERSION = 3;
 
 const persistConfig = {
   key: 'Root',
@@ -27,14 +28,19 @@ const persistConfig = {
   storage: AsyncStorage,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   migrate: async (state: any) => {
-    // If the stored version is older or doesn't exist, return initial state
+    // Preserve compatible persisted data, but canonicalize any legacy installation URL.
     if (!state?._persist?.version || state._persist.version < CURRENT_VERSION) {
       const initialState = appReducer(undefined, { type: 'INIT' });
       return {
         ...initialState,
+        ...state,
+        settings: sanitizeSettingsState(state?.settings),
       };
     }
-    return state;
+    return {
+      ...state,
+      settings: sanitizeSettingsState(state.settings),
+    };
   },
 };
 
@@ -43,7 +49,7 @@ const middlewares: Middleware[] = [contactListenerMiddleware.middleware];
 const rootReducer = (state: ReturnType<typeof appReducer>, action: AnyAction) => {
   if (action.type === 'auth/logout') {
     const initialState = appReducer(undefined, { type: 'INIT' });
-    return { ...initialState, settings: state.settings };
+    return { ...initialState, settings: sanitizeSettingsState(state?.settings) };
   }
   return appReducer(state, action);
 };

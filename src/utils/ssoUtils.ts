@@ -4,6 +4,7 @@ import { authActions } from '@/store/auth/authActions';
 import { AppDispatch } from '@/store';
 import { showToast } from './toastUtils';
 import i18n from '@/i18n';
+import { DEVEV_CONFIG } from '@/config/devev';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -16,7 +17,7 @@ export interface SsoLoginParams {
 export class SsoUtils {
   /**
    * Initiates SSO login flow using Expo AuthSession
-   * @param installationUrl - The Chatwoot installation URL
+   * @param installationUrl - The DEVEV Chatwoot installation URL
    * @returns Promise with SSO login result
    */
   static async loginWithSSO(
@@ -25,8 +26,8 @@ export class SsoUtils {
     try {
       // Create redirect URI with custom scheme
       const redirectUri = AuthSession.makeRedirectUri({
-        scheme: 'chatwootapp',
-        path: 'sso/callback',
+        scheme: DEVEV_CONFIG.URL_SCHEME,
+        path: DEVEV_CONFIG.SSO_CALLBACK_PATH,
       });
 
       // Construct SSO auth URL with mobile redirect URI parameter
@@ -99,7 +100,7 @@ export class SsoUtils {
    */
   static parseCallbackUrl(url: string): SsoLoginParams {
     try {
-      //  The URL will be in the format chatwootapp://auth/saml?email=<email>&sso_auth_token=<auth_token>&error=<error>
+      // The URL will be in the format devevinbox://auth/saml?email=<email>&sso_auth_token=<auth_token>&error=<error>
       const urlObj = new URL(url);
       const params: SsoLoginParams = {};
 

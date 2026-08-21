@@ -24,6 +24,7 @@ import { selectIsLoggingIn } from '@/store/auth/authSelectors';
 import { setLocale } from '@/store/settings/settingsSlice';
 import { useRefsContext } from '@/context/RefsContext';
 import { SsoUtils } from '@/utils/ssoUtils';
+import { isServerOverrideEnabled, isSsoEnabled } from '@/config/devev';
 
 type FormData = {
   email: string;
@@ -60,7 +61,7 @@ const LoginScreen = () => {
 
   useEffect(() => {
     dispatch(resetAuth());
-    if (!installationUrl) {
+    if (!installationUrl && isServerOverrideEnabled()) {
       navigation.navigate('ConfigureURL' as never);
     }
   }, [installationUrl, navigation, dispatch]);
@@ -85,9 +86,8 @@ const LoginScreen = () => {
     }
   };
 
-  // TODO: Change this condition based on EE check
-  // Show SSO login button only if installation URL contains app.chatwoot.com
-  const showSsoLogin = installationUrl.includes('app.chatwoot.com');
+  const showSsoLogin = isSsoEnabled();
+  const showServerOverride = isServerOverrideEnabled();
 
   const openResetPassword = () => {
     navigation.navigate('ResetPassword' as never);
@@ -256,7 +256,7 @@ const LoginScreen = () => {
           />
 
           <Pressable style={tailwind.style('pt-1 mb-8')} onPress={openResetPassword}>
-            <Animated.Text style={tailwind.style('text-blue-800 font-inter-medium-24 text-right')}>
+            <Animated.Text style={tailwind.style('text-brand-800 font-inter-medium-24 text-right')}>
               {i18n.t('LOGIN.FORGOT_PASSWORD')}
             </Animated.Text>
           </Pressable>
@@ -266,15 +266,20 @@ const LoginScreen = () => {
             handlePress={handleSubmit(onSubmit)}
           />
 
+          {showServerOverride && (
+            <Pressable
+              style={tailwind.style('flex-row justify-center items-center mt-6')}
+              onPress={openConfigInstallationURL}>
+              <Animated.Text style={tailwind.style('text-sm text-gray-900')}>
+                {i18n.t('LOGIN.CHANGE_URL')}
+              </Animated.Text>
+            </Pressable>
+          )}
           <Pressable
-            style={tailwind.style('flex-row justify-center items-center mt-6')}
-            onPress={openConfigInstallationURL}>
-            <Animated.Text style={tailwind.style('text-sm text-gray-900')}>
-              {i18n.t('LOGIN.CHANGE_URL')}
-            </Animated.Text>
-          </Pressable>
-          <Pressable
-            style={tailwind.style('flex-row justify-center items-center mt-4')}
+            style={tailwind.style(
+              'flex-row justify-center items-center',
+              showServerOverride ? 'mt-4' : 'mt-6',
+            )}
             onPress={() => languagesModalSheetRef.current?.present()}>
             <Animated.Text style={tailwind.style('text-sm text-gray-900')}>
               {i18n.t('LOGIN.CHANGE_LANGUAGE')}

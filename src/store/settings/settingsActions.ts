@@ -21,8 +21,7 @@ import type {
   PushPayload,
 } from './settingsTypes';
 import I18n from '@/i18n';
-import { URL_TYPE } from '@/constants/url';
-import { checkValidUrl, extractDomain, handleApiError } from './settingsUtils';
+import { checkValidUrl, getAllowedInstallationUrls, handleApiError } from './settingsUtils';
 import { showToast } from '@/utils/toastUtils';
 
 const createSettingsThunk = <TResponse, TPayload>(
@@ -48,20 +47,16 @@ export const settingsActions = {
           throw new Error(I18n.t('CONFIGURE_URL.ERROR'));
         }
 
-        const installationUrl = extractDomain({ url });
-        const INSTALLATION_URL = `${URL_TYPE}${installationUrl}/`;
-        const WEB_SOCKET_URL = `wss://${url}/cable`;
-        const isValid = await SettingsService.verifyInstallationUrl(INSTALLATION_URL);
+        const installationUrls = getAllowedInstallationUrls({ url });
+        const isValid = await SettingsService.verifyInstallationUrl(
+          installationUrls.installationUrl,
+        );
 
         if (!isValid) {
           throw new Error(I18n.t('CONFIGURE_URL.ERROR'));
         }
 
-        return {
-          installationUrl: INSTALLATION_URL,
-          webSocketUrl: WEB_SOCKET_URL,
-          baseUrl: installationUrl,
-        };
+        return installationUrls;
       } catch (error) {
         const message = error instanceof Error ? error.message : I18n.t('CONFIGURE_URL.ERROR');
         showToast({ message });

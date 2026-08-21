@@ -37,7 +37,7 @@ export const TextBubble = (props: TextBubbleProps) => {
     hasTranslations && !showOriginal ? translatedText : (content || '');
 
   const toggleTextColor =
-    variant === MESSAGE_VARIANTS.USER ? 'text-blue-200' : 'text-blue-700';
+    variant === MESSAGE_VARIANTS.USER ? 'text-brand-200' : 'text-brand-700';
 
   const renderContent = () => (
     <React.Fragment>

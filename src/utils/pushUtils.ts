@@ -1,6 +1,7 @@
 import { Platform } from 'react-native';
 import { NOTIFICATION_TYPES } from '@/constants';
 import { Notification } from '@/types/Notification';
+import { DEVEV_INSTALLATION, isDevevInstallationUrl, isServerOverrideEnabled } from '@/config/devev';
 
 let notifee: typeof import('@notifee/react-native').default | undefined;
 
@@ -44,7 +45,14 @@ export const findConversationLinkFromPush = ({
     if (conversationId) {
       // Older servers omit accountId; fall back to the active account so the link stays valid.
       const accountId = notification.accountId ?? currentAccountId;
-      const conversationLink = `${installationUrl}/app/accounts/${accountId}/conversations/${conversationId}/${primaryActorId}/${primaryActorType}`;
+      if (!accountId) {
+        return;
+      }
+      const baseUrl =
+        isDevevInstallationUrl(installationUrl) || isServerOverrideEnabled()
+          ? installationUrl.replace(/\/$/, '')
+          : DEVEV_INSTALLATION.installationUrl.replace(/\/$/, '');
+      const conversationLink = `${baseUrl}/app/accounts/${accountId}/conversations/${conversationId}/${primaryActorId}/${primaryActorType}`;
       return conversationLink;
     }
   }

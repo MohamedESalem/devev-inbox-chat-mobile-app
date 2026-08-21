@@ -44,7 +44,7 @@ export function SearchEmptyState({
         <Pressable onPress={onRetry}>
           <Animated.Text
             style={tailwind.style(
-              'text-sm font-inter-420-20 tracking-[0.32px] text-blue-800',
+              'text-sm font-inter-420-20 tracking-[0.32px] text-brand-800',
             )}>
             {i18n.t('SEARCH.TAP_TO_RETRY')}
           </Animated.Text>

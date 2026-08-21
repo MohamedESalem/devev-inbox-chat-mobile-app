@@ -196,7 +196,7 @@ export const URL_REGEX = {
   CONVERSATION: 'app/accounts/[-0-9]+/conversations/[-0-9]',
 };
 
-export const SSO_CALLBACK_URL = 'chatwootapp://auth/saml';
+export { DEVEV_SSO_CALLBACK_URL as SSO_CALLBACK_URL } from '@/config/devev';
 
 export const CONVERSATION_TOGGLE_STATUS = {
   open: 'RESOLVE',

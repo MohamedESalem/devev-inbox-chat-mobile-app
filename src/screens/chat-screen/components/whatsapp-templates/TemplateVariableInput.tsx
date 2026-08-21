@@ -39,7 +39,7 @@ const TemplateVariableInput = ({
       placeholderTextColor={tailwind.color('text-gray-500')}
       style={tailwind.style(
         'flex-1 px-3 py-2 rounded-[10px] border text-base font-inter-420-20 text-gray-950',
-        isFocused ? 'border-blue-700' : 'border-blackA-A4',
+        isFocused ? 'border-brand-700' : 'border-blackA-A4',
       )}
     />
   </View>

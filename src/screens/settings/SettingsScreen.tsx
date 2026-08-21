@@ -33,7 +33,7 @@ import { UserAvatar } from './components/UserAvatar';
 
 import { LANGUAGES, TAB_BAR_HEIGHT } from '@/constants';
 import { useRefsContext } from '@/context';
-import { ChatwootIcon, NotificationIcon, SwitchIcon, TranslateIcon } from '@/svg-icons';
+import { ChatIcon, NotificationIcon, SwitchIcon, TranslateIcon } from '@/svg-icons';
 import { GenericListType } from '@/types';
 
 import { useHaptic } from '@/utils';
@@ -46,11 +46,7 @@ import {
 } from '@/store/auth/authSelectors';
 import { logout } from '@/store/auth/authSlice';
 import { authActions } from '@/store/auth/authActions';
-import {
-  selectLocale,
-  selectIsChatwootCloud,
-  selectPushToken,
-} from '@/store/settings/settingsSelectors';
+import { selectLocale, selectPushToken } from '@/store/settings/settingsSelectors';
 import { settingsActions } from '@/store/settings/settingsActions';
 import { setLocale } from '@/store/settings/settingsSlice';
 
@@ -59,6 +55,7 @@ import { PROFILE_EVENTS } from '@/constants/analyticsEvents';
 import { getUserPermissions } from '@/utils/permissionUtils';
 import { CONVERSATION_PERMISSIONS } from '@/constants/permissions';
 import { useAppDispatch, useAppSelector } from '@/hooks';
+import { DEVEV_CONFIG } from '@/config/devev';
 
 const appName = Application.applicationName;
 const appVersion = Application.nativeApplicationVersion;
@@ -114,9 +111,11 @@ const SettingsScreen = () => {
     operatingSystem: Platform.OS, // android/ios
   };
 
-  const isChatwootCloud = useAppSelector(selectIsChatwootCloud);
-
-  const chatwootInstance = isChatwootCloud ? `${appName} cloud` : `${appName} self-hosted`;
+  const appInstance = `${DEVEV_CONFIG.PRODUCT_NAME} self-hosted`;
+  const supportChatEnabled = Boolean(
+    process.env.EXPO_PUBLIC_DEVEV_SUPPORT_WEBSITE_TOKEN &&
+      process.env.EXPO_PUBLIC_DEVEV_SUPPORT_BASE_URL,
+  );
 
   const accounts = useSelector(selectAccounts) || [];
 
@@ -241,14 +240,18 @@ const SettingsScreen = () => {
       subtitleType: 'light',
       onPressListItem: openURL,
     },
-    {
-      hasChevron: true,
-      title: i18n.t('SETTINGS.CHAT_WITH_US'),
-      icon: <ChatwootIcon />,
-      subtitle: '',
-      subtitleType: 'light',
-      onPressListItem: () => toggleWidget(true),
-    },
+    ...(supportChatEnabled
+      ? [
+          {
+            hasChevron: true,
+            title: i18n.t('SETTINGS.CHAT_WITH_US'),
+            icon: <ChatIcon />,
+            subtitle: '',
+            subtitleType: 'light' as const,
+            onPressListItem: () => toggleWidget(true),
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -300,7 +303,7 @@ const SettingsScreen = () => {
           style={tailwind.style('p-4 items-center')}
           onLongPress={() => debugActionsSheetRef.current?.present()}>
           <Text style={tailwind.style('text-sm text-gray-700 ')}>
-            {`${chatwootInstance} ${appVersionDetails}`}
+            {`${appInstance} ${appVersionDetails}`}
           </Text>
         </Pressable>
       </Animated.ScrollView>
@@ -333,13 +336,13 @@ const SettingsScreen = () => {
         <BottomSheetHeader headerText={i18n.t('SETTINGS.DEBUG_ACTIONS')} />
         <DebugActions />
       </Sheet>
-      {!!process.env.EXPO_PUBLIC_CHATWOOT_WEBSITE_TOKEN &&
-        !!process.env.EXPO_PUBLIC_CHATWOOT_BASE_URL &&
+      {!!process.env.EXPO_PUBLIC_DEVEV_SUPPORT_WEBSITE_TOKEN &&
+        !!process.env.EXPO_PUBLIC_DEVEV_SUPPORT_BASE_URL &&
         !!showWidget && (
           <ChatWootWidget
-            websiteToken={process.env.EXPO_PUBLIC_CHATWOOT_WEBSITE_TOKEN}
+            websiteToken={process.env.EXPO_PUBLIC_DEVEV_SUPPORT_WEBSITE_TOKEN}
             locale="en"
-            baseUrl={process.env.EXPO_PUBLIC_CHATWOOT_BASE_URL}
+            baseUrl={process.env.EXPO_PUBLIC_DEVEV_SUPPORT_BASE_URL}
             closeModal={() => toggleWidget(false)}
             isModalVisible={showWidget}
             user={userDetails}

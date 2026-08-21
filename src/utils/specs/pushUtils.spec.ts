@@ -32,7 +32,7 @@ describe('findConversationLinkFromPush', () => {
       primaryActorType: 'Conversation',
       primaryActor: { id: 14428 },
     };
-    const installationUrl = 'https://app.chatwoot.com';
+    const installationUrl = 'https://chat.inbox.devev.net';
     const transformedNotification = transformNotification(notification);
     const result = findConversationLinkFromPush({
       notification: transformedNotification,
@@ -40,7 +40,7 @@ describe('findConversationLinkFromPush', () => {
       currentAccountId: 1,
     });
     expect(result).toBe(
-      'https://app.chatwoot.com/app/accounts/1/conversations/14428/14902/Conversation',
+      'https://chat.inbox.devev.net/app/accounts/1/conversations/14428/14902/Conversation',
     );
   });
 
@@ -53,7 +53,7 @@ describe('findConversationLinkFromPush', () => {
       primaryActorType: 'Conversation',
       primaryActor: { id: 14428 },
     };
-    const installationUrl = 'https://app.chatwoot.com';
+    const installationUrl = 'https://chat.inbox.devev.net';
     const transformedNotification = transformNotification(notification);
     const result = findConversationLinkFromPush({
       notification: transformedNotification,
@@ -61,7 +61,7 @@ describe('findConversationLinkFromPush', () => {
       currentAccountId: 1,
     });
     expect(result).toBe(
-      'https://app.chatwoot.com/app/accounts/7/conversations/14428/14902/Conversation',
+      'https://chat.inbox.devev.net/app/accounts/7/conversations/14428/14902/Conversation',
     );
   });
 
@@ -73,7 +73,7 @@ describe('findConversationLinkFromPush', () => {
       primaryActorType: 'Conversation',
       primaryActor: { id: 14428 },
     };
-    const installationUrl = 'https://app.chatwoot.com';
+    const installationUrl = 'https://chat.inbox.devev.net';
     const transformedNotification = transformNotification(notification);
     const result = findConversationLinkFromPush({
       notification: transformedNotification,
@@ -81,7 +81,7 @@ describe('findConversationLinkFromPush', () => {
       currentAccountId: 5,
     });
     expect(result).toBe(
-      'https://app.chatwoot.com/app/accounts/5/conversations/14428/14902/Conversation',
+      'https://chat.inbox.devev.net/app/accounts/5/conversations/14428/14902/Conversation',
     );
   });
 
@@ -93,7 +93,7 @@ describe('findConversationLinkFromPush', () => {
       primaryActorType: 'Message',
       primaryActor: { conversationId: 14429, id: 58731 },
     };
-    const installationUrl = 'https://app.chatwoot.com';
+    const installationUrl = 'https://chat.inbox.devev.net';
     const transformedNotification = transformNotification(notification);
     const result = findConversationLinkFromPush({
       notification: transformedNotification,
@@ -101,7 +101,7 @@ describe('findConversationLinkFromPush', () => {
       currentAccountId: 1,
     });
     expect(result).toBe(
-      'https://app.chatwoot.com/app/accounts/1/conversations/14429/58731/Message',
+      'https://chat.inbox.devev.net/app/accounts/1/conversations/14429/58731/Message',
     );
   });
 
@@ -113,7 +113,7 @@ describe('findConversationLinkFromPush', () => {
       primaryActorType: 'Message',
       primaryActor: { conversationId: 14428, id: 58725 },
     };
-    const installationUrl = 'https://app.chatwoot.com';
+    const installationUrl = 'https://chat.inbox.devev.net';
     const transformedNotification = transformNotification(notification);
     const result = findConversationLinkFromPush({
       notification: transformedNotification,
@@ -121,7 +121,7 @@ describe('findConversationLinkFromPush', () => {
       currentAccountId: 1,
     });
     expect(result).toBe(
-      'https://app.chatwoot.com/app/accounts/1/conversations/14428/58725/Message',
+      'https://chat.inbox.devev.net/app/accounts/1/conversations/14428/58725/Message',
     );
   });
 
@@ -133,7 +133,7 @@ describe('findConversationLinkFromPush', () => {
       primaryActorType: 'Message',
       primaryActor: { conversationId: 14427, id: 58712 },
     };
-    const installationUrl = 'https://app.chatwoot.com';
+    const installationUrl = 'https://chat.inbox.devev.net';
     const transformedNotification = transformNotification(notification);
     const result = findConversationLinkFromPush({
       notification: transformedNotification,
@@ -141,7 +141,7 @@ describe('findConversationLinkFromPush', () => {
       currentAccountId: 1,
     });
     expect(result).toBe(
-      'https://app.chatwoot.com/app/accounts/1/conversations/14427/58712/Message',
+      'https://chat.inbox.devev.net/app/accounts/1/conversations/14427/58712/Message',
     );
   });
 
@@ -153,7 +153,7 @@ describe('findConversationLinkFromPush', () => {
       primaryActorType: 'Message',
       primaryActor: { conversationId: 14427, id: 58712 },
     };
-    const installationUrl = 'https://app.chatwoot.com';
+    const installationUrl = 'https://chat.inbox.devev.net';
     const transformedNotification = transformNotification(notification);
     const result = findConversationLinkFromPush({
       notification: transformedNotification,
@@ -161,5 +161,24 @@ describe('findConversationLinkFromPush', () => {
       currentAccountId: 1,
     });
     expect(result).toBe(undefined);
+  });
+
+  it('should fall back to the DEVEV server if an unsupported installation URL is passed in', () => {
+    const notification = {
+      id: 8687,
+      notificationType: 'conversation_creation',
+      primaryActorId: 14902,
+      primaryActorType: 'Conversation',
+      primaryActor: { id: 14428 },
+    };
+    const transformedNotification = transformNotification(notification);
+    const result = findConversationLinkFromPush({
+      notification: transformedNotification,
+      installationUrl: 'https://example.invalid',
+      currentAccountId: 1,
+    });
+    expect(result).toBe(
+      'https://chat.inbox.devev.net/app/accounts/1/conversations/14428/14902/Conversation',
+    );
   });
 });

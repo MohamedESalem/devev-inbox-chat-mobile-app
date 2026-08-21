@@ -31,6 +31,9 @@ yarn-error.*
 # local env files
 .env*.local
 
+# Local source branding inputs. Keep only finalized app assets in Git.
+some data about Devev/
+
 # typescript
 *.tsbuildinfo
 

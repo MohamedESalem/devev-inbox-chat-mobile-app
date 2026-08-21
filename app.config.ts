@@ -1,18 +1,20 @@
 import { ConfigContext, ExpoConfig } from 'expo/config';
+import { DEVEV_CONFIG } from './src/config/devev';
 
 export default ({ config }: ConfigContext): ExpoConfig => {
   return {
-    name: 'Chatwoot',
-    slug: process.env.EXPO_PUBLIC_APP_SLUG || 'chatwoot-mobile',
+    name: DEVEV_CONFIG.PRODUCT_NAME,
+    slug: process.env.EXPO_PUBLIC_APP_SLUG || DEVEV_CONFIG.EXPO_SLUG,
     version: '4.9.0',
     orientation: 'portrait',
     icon: './assets/icon.png',
     userInterfaceStyle: 'light',
-    scheme: 'chatwootapp',
+    scheme: DEVEV_CONFIG.URL_SCHEME,
     ios: {
       supportsTablet: true,
-      bundleIdentifier: 'com.chatwoot.app',
+      bundleIdentifier: DEVEV_CONFIG.PACKAGE_ID,
       infoPlist: {
+        CFBundleDisplayName: DEVEV_CONFIG.PRODUCT_NAME,
         NSCameraUsageDescription:
           'This app requires access to the camera to upload images and videos.',
         NSPhotoLibraryUsageDescription:
@@ -23,15 +25,22 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         UIBackgroundModes: ['fetch', 'remote-notification'],
         ITSAppUsesNonExemptEncryption: false,
       },
-      // Please use the relative path to the google-services.json file
+      // Please use the relative path to the GoogleService-Info.plist file
       googleServicesFile: process.env.EXPO_PUBLIC_IOS_GOOGLE_SERVICES_FILE,
       entitlements: { 'aps-environment': 'production' },
-      associatedDomains: ['applinks:app.chatwoot.com'],
+      associatedDomains: [`applinks:${DEVEV_CONFIG.SERVER_HOST}`],
     },
     android: {
-      adaptiveIcon: { foregroundImage: './assets/adaptive-icon.png', backgroundColor: '#ffffff' },
-      package: 'com.chatwoot.app',
-      permissions: ['android.permission.CAMERA', 'android.permission.RECORD_AUDIO'],
+      adaptiveIcon: {
+        foregroundImage: './assets/adaptive-icon.png',
+        backgroundColor: DEVEV_CONFIG.PRIMARY_COLOR,
+      },
+      package: DEVEV_CONFIG.PACKAGE_ID,
+      permissions: [
+        'android.permission.CAMERA',
+        'android.permission.RECORD_AUDIO',
+        'android.permission.POST_NOTIFICATIONS',
+      ],
       // Please use the relative path to the google-services.json file
       googleServicesFile: process.env.EXPO_PUBLIC_ANDROID_GOOGLE_SERVICES_FILE,
       intentFilters: [
@@ -41,9 +50,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           data: [
             {
               scheme: 'https',
-              host: 'app.chatwoot.com',
+              host: DEVEV_CONFIG.SERVER_HOST,
               pathPrefix: '/app/accounts/',
-              pathPattern: '/*/conversations/*',
             },
           ],
           category: ['BROWSABLE', 'DEFAULT'],
@@ -52,7 +60,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           action: 'VIEW',
           data: [
             {
-              scheme: 'chatwootapp',
+              scheme: DEVEV_CONFIG.URL_SCHEME,
             },
           ],
           category: ['BROWSABLE', 'DEFAULT'],
@@ -65,7 +73,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         storybookEnabled: process.env.EXPO_STORYBOOK_ENABLED,
       },
     },
-    owner: 'chatwoot',
+    owner: process.env.EXPO_PUBLIC_EXPO_OWNER,
     plugins: [
       'expo-font',
       'expo-image',
@@ -92,6 +100,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       '@react-native-community/datetimepicker',
       '@react-native-firebase/app',
       '@react-native-firebase/messaging',
+      './with-android-notification-icon.js',
       [
         'expo-build-properties',
         {

@@ -8,6 +8,7 @@ import i18n from 'i18n';
 import { selectNotificationSettings } from '@/store/settings/settingsSelectors';
 import { settingsActions } from '@/store/settings/settingsActions';
 import { NOTIFICATION_PREFERENCE_TYPES } from '@/constants';
+import { DEVEV_CONFIG } from '@/config/devev';
 
 const addOrRemoveItemFromArray = <T,>(array: T[], key: T): T[] => {
   const index = array.indexOf(key);
@@ -76,7 +77,10 @@ export const NotificationPreferences = () => {
             {i18n.t(`NOTIFICATION_PREFERENCE.${NOTIFICATION_PREFERENCE_TYPES[item]}`)}
           </Animated.Text>
           <Switch
-            trackColor={{ false: '#C9D7E3', true: '#1F93FF' }}
+            trackColor={{
+              false: '#C9D7E3',
+              true: tailwind.color('bg-brand-800') || DEVEV_CONFIG.PRIMARY_COLOR,
+            }}
             thumbColor="#FFFFFF"
             style={styles.switch}
             ios_backgroundColor="#C9D7E3"

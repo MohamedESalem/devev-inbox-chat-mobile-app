@@ -132,7 +132,7 @@ const LeftSlot = ({
             <Text
               style={tailwind.style(
                 'text-md font-inter-medium-24 leading-[17px] tracking-[0.24px]',
-                filtersAppliedCount === 0 ? 'text-gray-700' : 'text-blue-800',
+                filtersAppliedCount === 0 ? 'text-gray-700' : 'text-brand-800',
               )}>
               {i18n.t('CONVERSATION.HEADER.CLEAR_FILTER')}
               {filtersAppliedCount > 0 ? ` (${filtersAppliedCount})` : ''}
@@ -163,7 +163,7 @@ const RightSection = ({
             {filtersAppliedCount > 0 && (
               <Animated.View
                 style={tailwind.style(
-                  'absolute z-10 -right-0.5 h-2.5 w-2.5 rounded-full bg-blue-800',
+                  'absolute z-10 -right-0.5 h-2.5 w-2.5 rounded-full bg-brand-800',
                 )}
               />
             )}
