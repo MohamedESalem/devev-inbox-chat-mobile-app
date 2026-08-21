@@ -4,6 +4,27 @@ import type { PendingMessage, MessageBuilderPayload } from '@/store/conversation
 import type { Message } from '@/types';
 import { hasOneDayPassed } from './dateTimeUtils';
 
+export type RenderableEmailBody = {
+  content: string;
+  format: 'html' | 'markdown';
+};
+
+export const getRenderableEmailBody = (
+  message: Pick<Message, 'content' | 'contentAttributes'>,
+): RenderableEmailBody => {
+  const htmlContent = message.contentAttributes?.email?.htmlContent?.full;
+  if (htmlContent?.trim()) {
+    return { content: htmlContent, format: 'html' };
+  }
+
+  const textContent = message.contentAttributes?.email?.textContent?.full;
+  if (textContent?.trim()) {
+    return { content: textContent.replace(/\r?\n/g, '<br>'), format: 'html' };
+  }
+
+  return { content: message.content || '', format: 'markdown' };
+};
+
 export const getUuid = () =>
   'xxxxxxxx4xxx'.replace(/[xy]/g, c => {
     // eslint-disable-next-line no-bitwise

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Alert, Pressable, StyleSheet } from 'react-native';
 import FileViewer from 'react-native-file-viewer';
 import Animated from 'react-native-reanimated';
@@ -39,39 +39,33 @@ export const FileBubblePreview = (props: FilePreviewProps) => {
   const uniqueFileName = generateUniqueFileName(fileSrc, fileName);
   const localFilePath = dirs.DocumentDir + `/${uniqueFileName}`;
 
-  const previewFile = () => {
+  const previewFile = async () => {
+    if (fileDownload) {
+      return;
+    }
+
     try {
-      FileViewer.open(localFilePath).catch(e => Alert.alert(e));
-    } catch (e) {
-      Alert.alert('Not able to preview file' + e);
+      const fileExists = await ReactNativeBlobUtil.fs.exists(localFilePath);
+      if (!fileExists) {
+        setFileDownload(true);
+        await ReactNativeBlobUtil.config({
+          overwrite: true,
+          path: localFilePath,
+          fileCache: true,
+        }).fetch('GET', fileSrc);
+      }
+      await FileViewer.open(localFilePath);
+    } catch {
+      const partialFileExists = await ReactNativeBlobUtil.fs.exists(localFilePath);
+      if (partialFileExists) {
+        await ReactNativeBlobUtil.fs.unlink(localFilePath).catch(() => undefined);
+      }
+      Alert.alert('File load error', 'Unable to download or open this file.');
+    } finally {
+      setFileDownload(false);
     }
   };
 
-  useEffect(() => {
-    const asyncFileDownload = () => {
-      ReactNativeBlobUtil.fs.exists(localFilePath).then(res => {
-        if (res) {
-          setFileDownload(false);
-        } else {
-          setFileDownload(true);
-          ReactNativeBlobUtil.config({
-            overwrite: true,
-            path: localFilePath,
-            fileCache: true,
-          })
-            .fetch('GET', fileSrc)
-            .then(_result => {
-              setFileDownload(false);
-            })
-            .catch(() => {
-              Alert.alert('File load error');
-            });
-        }
-      });
-    };
-    asyncFileDownload();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   return (
     <React.Fragment>
       {fileDownload ? (
@@ -101,7 +95,10 @@ export const FileBubblePreview = (props: FilePreviewProps) => {
           />
         </Animated.View>
       )}
-      <Pressable hitSlop={{ top: 8, bottom: 8, left: 4, right: 4 }} onPress={previewFile}>
+      <Pressable
+        disabled={fileDownload}
+        hitSlop={{ top: 8, bottom: 8, left: 4, right: 4 }}
+        onPress={previewFile}>
         <Animated.View style={tailwind.style('relative')}>
           <Animated.Text
             numberOfLines={1}

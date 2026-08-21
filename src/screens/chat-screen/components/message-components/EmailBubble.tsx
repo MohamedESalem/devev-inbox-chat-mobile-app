@@ -9,6 +9,7 @@ import { Message } from '@/types';
 import { MarkdownBubble } from './MarkdownBubble';
 import { MessageAttachments } from './MessageAttachments';
 import { MESSAGE_TYPES } from '@/constants';
+import { getRenderableEmailBody } from '@/utils/messageUtils';
 
 type EmailBubbleProps = {
   item: Message;
@@ -18,28 +19,12 @@ type EmailBubbleProps = {
 
 export const EmailBubble = (props: EmailBubbleProps) => {
   const messageItem = props.item as Message;
-  const { sender, contentAttributes, messageType, content } = messageItem;
-
-  const emailMessageContent = () => {
-    const {
-      htmlContent: { full: fullHTMLContent } = { full: undefined },
-      textContent: { full: fullTextContent } = { full: undefined },
-    } = contentAttributes?.email || {};
-
-    if (fullHTMLContent) {
-      return fullHTMLContent;
-    }
-
-    if (fullTextContent) {
-      return fullTextContent.replace(/\n/g, '<br>');
-    }
-
-    return content || '';
-  };
+  const { sender, contentAttributes, messageType } = messageItem;
+  const emailBody = getRenderableEmailBody(messageItem);
 
   const isOutgoing = messageType === MESSAGE_TYPES.OUTGOING;
 
-  const FormattedEmail = emailMessageContent().replace('height:100%;', '');
+  const formattedEmail = emailBody.content.replace('height:100%;', '');
 
   const baseStyle = `
         * {
@@ -66,8 +51,8 @@ export const EmailBubble = (props: EmailBubbleProps) => {
       {contentAttributes && <EmailMeta {...{ contentAttributes, sender }} />}
       <Animated.View style={[tailwind.style('flex  w-full')]}>
         <Animated.View style={tailwind.style('w-full')}>
-          {content && isOutgoing ? (
-            <MarkdownBubble messageContent={content} variant={props.variant} />
+          {emailBody.format === 'markdown' ? (
+            <MarkdownBubble messageContent={emailBody.content} variant={props.variant} />
           ) : (
             <AutoHeightWebView
               style={{ width: '100%', minHeight: 1, minWidth: '100%' }}
@@ -75,7 +60,7 @@ export const EmailBubble = (props: EmailBubbleProps) => {
               forceDarkOn={false}
               customStyle={emailCustomStyle}
               source={{
-                html: FormattedEmail,
+                html: formattedEmail,
               }}
               viewportContent={'width=device-width, user-scalable=no'}
             />

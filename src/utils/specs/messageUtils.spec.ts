@@ -1,6 +1,7 @@
 import {
   canRetryMessage,
   createPendingMessage,
+  getRenderableEmailBody,
   hasMessageFailedWithExternalError,
 } from '@/utils/messageUtils';
 import { MESSAGE_STATUS, MESSAGE_TYPES, SENDER_TYPES } from '@/constants';
@@ -20,6 +21,48 @@ const buildMessage = (overrides: Partial<Message> = {}): Message =>
     contentAttributes: null,
     ...overrides,
   }) as unknown as Message;
+
+describe('getRenderableEmailBody', () => {
+  it('prefers the HTML email body over the lossy Markdown fallback', () => {
+    const message = buildMessage({
+      content: 'Welcome to ** Essam Salem Law Firm ** Thank you for contacting us.',
+      contentAttributes: {
+        email: {
+          htmlContent: {
+            full: '<p><strong>Welcome to Essam Salem Law Firm</strong></p><p>Thank you.</p>',
+          },
+        },
+      },
+    } as Partial<Message>);
+
+    expect(getRenderableEmailBody(message)).toEqual({
+      content: '<p><strong>Welcome to Essam Salem Law Firm</strong></p><p>Thank you.</p>',
+      format: 'html',
+    });
+  });
+
+  it('preserves plain-text email line breaks for HTML rendering', () => {
+    const message = buildMessage({
+      contentAttributes: {
+        email: { textContent: { full: 'First paragraph\r\n\r\nSecond paragraph' } },
+      },
+    } as Partial<Message>);
+
+    expect(getRenderableEmailBody(message)).toEqual({
+      content: 'First paragraph<br><br>Second paragraph',
+      format: 'html',
+    });
+  });
+
+  it('uses Markdown only when the message has no structured email body', () => {
+    const message = buildMessage({ content: '**Fallback**' });
+
+    expect(getRenderableEmailBody(message)).toEqual({
+      content: '**Fallback**',
+      format: 'markdown',
+    });
+  });
+});
 
 describe('createPendingMessage', () => {
   it('stamps the sender so the message stays attributed once it leaves the progress state', () => {
