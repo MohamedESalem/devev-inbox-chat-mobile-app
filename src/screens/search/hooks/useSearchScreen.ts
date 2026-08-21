@@ -45,7 +45,10 @@ export function useSearchScreen() {
   );
 
   const [listRefs] = useState(() => {
-    const refs = {} as Record<SearchSectionType, React.RefObject<FlashListRef<SearchItem>>>;
+    const refs = {} as Record<
+      SearchSectionType,
+      React.RefObject<FlashListRef<SearchItem> | null>
+    >;
     SEARCH_SECTIONS.forEach(section => {
       refs[section.id] = React.createRef<FlashListRef<SearchItem>>();
     });

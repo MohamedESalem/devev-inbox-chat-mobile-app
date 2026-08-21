@@ -29,7 +29,7 @@ export function getContactAdditionalData(
  * Handle contact item press - fetches full contact details and navigates
  */
 export async function handleContactPress(
-  navigation: NavigationProp<ParamListBase>,
+  navigation: Pick<NavigationProp<ParamListBase>, 'dispatch'>,
   item: Contact,
   dispatch?: AppDispatch,
 ): Promise<void> {
@@ -69,7 +69,7 @@ export async function handleContactPress(
  * Handle conversation item press - navigates to chat screen
  */
 export function handleConversationPress(
-  navigation: NavigationProp<ParamListBase>,
+  navigation: Pick<NavigationProp<ParamListBase>, 'dispatch'>,
   item: Conversation,
 ): void {
   const pushToChatScreen = StackActions.push('ChatScreen', {
@@ -82,7 +82,10 @@ export function handleConversationPress(
 /**
  * Handle message item press - navigates to chat screen with message ID
  */
-export function handleMessagePress(navigation: NavigationProp<ParamListBase>, item: Message): void {
+export function handleMessagePress(
+  navigation: Pick<NavigationProp<ParamListBase>, 'dispatch'>,
+  item: Message,
+): void {
   const pushToChatScreen = StackActions.push('ChatScreen', {
     conversationId: item.conversationId,
     isConversationOpenedExternally: false,

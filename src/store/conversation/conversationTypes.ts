@@ -171,12 +171,12 @@ export interface BulkActionLabels {
 export interface AssigneePayload {
   conversationId: number;
   assigneeId?: number;
-  teamId?: string;
+  teamId?: number;
 }
 
 export interface AssignTeamPayload {
   conversationId: number;
-  teamId: string;
+  teamId: number;
 }
 
 export interface AssignTeamAPIResponse {

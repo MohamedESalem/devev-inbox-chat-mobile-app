@@ -29,7 +29,7 @@ export interface SearchSectionConfig {
   getId: (item: SearchItem) => string | number;
   getItemId: (item: SearchItem) => string | number;
   onPress: (
-    navigation: NavigationProp<ParamListBase>,
+    navigation: Pick<NavigationProp<ParamListBase>, 'dispatch'>,
     item: SearchItem,
     dispatch?: AppDispatch,
     additionalData?: Record<string, unknown>,

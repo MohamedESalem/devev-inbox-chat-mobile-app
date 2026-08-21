@@ -13,7 +13,7 @@ const SECTION_PROP_NAMES: Record<SearchSectionType, string> = {
 export function createRenderItem(
   searchQuery: string,
   allSectionsData: Record<SearchSectionType, SearchItem[]>,
-  navigation: NavigationProp<ParamListBase>,
+  navigation: Pick<NavigationProp<ParamListBase>, 'dispatch'>,
   dispatch: AppDispatch,
 ) {
   const SearchResultItem = (
