@@ -74,9 +74,7 @@ export const CopilotInputBar = ({
           <ThinkingText />
         </Animated.View>
       ) : (
-        <Animated.View
-          key="input"
-          entering={FadeIn.duration(200)}
+        <Animated.View key="input" entering={FadeIn.duration(200)}
           exiting={FadeOut.duration(150)}>
           <TextInput
             value={followUpText}

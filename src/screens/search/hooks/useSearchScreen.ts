@@ -170,7 +170,7 @@ export function useSearchScreen() {
       });
       setExpandedSections(newExpanded);
     },
-    [dispatch, accountId, cancelInFlightSearches],
+    [dispatch, cancelInFlightSearches],
   );
 
   const handleClearRecentSearches = useCallback(async () => {

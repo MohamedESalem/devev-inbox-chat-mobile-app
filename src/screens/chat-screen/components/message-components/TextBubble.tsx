@@ -21,10 +21,9 @@ export const TextBubble = (props: TextBubbleProps) => {
 
   const translations = contentAttributes?.translations;
   const activeLocale = i18n.locale?.split('_')[0] || 'en';
-  const translatedText =
-    translations
-      ? (translations[activeLocale] || Object.values(translations)[0] || null)
-      : null;
+  const translatedText = translations
+    ? translations[activeLocale] || Object.values(translations)[0] || null
+    : null;
   const hasTranslations = !!translatedText;
 
   const [showOriginal, setShowOriginal] = useState(false);
@@ -33,8 +32,7 @@ export const TextBubble = (props: TextBubbleProps) => {
     setShowOriginal(prev => !prev);
   }, []);
 
-  const displayContent =
-    hasTranslations && !showOriginal ? translatedText : (content || '');
+  const displayContent = hasTranslations && !showOriginal ? translatedText : content || '';
 
   const toggleTextColor =
     variant === MESSAGE_VARIANTS.USER ? 'text-brand-200' : 'text-brand-700';
