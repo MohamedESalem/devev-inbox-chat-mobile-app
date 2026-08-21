@@ -2,6 +2,20 @@ import { ConfigContext, ExpoConfig } from 'expo/config';
 import { DEVEV_CONFIG } from './devev.config';
 
 export default ({ config }: ConfigContext): ExpoConfig => {
+  const sentryPlugin: NonNullable<ExpoConfig['plugins']> =
+    process.env.EXPO_PUBLIC_SENTRY_PROJECT_NAME && process.env.EXPO_PUBLIC_SENTRY_ORG_NAME
+      ? [
+          [
+            '@sentry/react-native',
+            {
+              url: 'https://sentry.io/',
+              project: process.env.EXPO_PUBLIC_SENTRY_PROJECT_NAME,
+              organization: process.env.EXPO_PUBLIC_SENTRY_ORG_NAME,
+            },
+          ],
+        ]
+      : [];
+
   return {
     name: DEVEV_CONFIG.PRODUCT_NAME,
     slug: process.env.EXPO_PUBLIC_APP_SLUG || DEVEV_CONFIG.EXPO_SLUG,
@@ -90,14 +104,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         },
       ],
       ['react-native-permissions', { iosPermissions: ['Camera', 'PhotoLibrary', 'MediaLibrary'] }],
-      [
-        '@sentry/react-native',
-        {
-          url: 'https://sentry.io/',
-          project: process.env.EXPO_PUBLIC_SENTRY_PROJECT_NAME,
-          organization: process.env.EXPO_PUBLIC_SENTRY_ORG_NAME,
-        },
-      ],
+      ...sentryPlugin,
       'expo-web-browser',
       '@react-native-community/datetimepicker',
       '@react-native-firebase/app',
