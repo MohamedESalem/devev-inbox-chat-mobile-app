@@ -194,7 +194,7 @@ const TEMPLATES_MENU_OPTION = {
 
 export const validateFileAndSetAttachments = async (dispatch: AppDispatch, attachment: Asset) => {
   const { fileSize } = attachment;
-  if (findFileSize(fileSize) <= MAXIMUM_FILE_UPLOAD_SIZE) {
+  if (findFileSize(fileSize ?? 0) <= MAXIMUM_FILE_UPLOAD_SIZE) {
     dispatch(updateAttachments([attachment]));
   } else {
     showToast({ message: i18n.t('CONVERSATION.FILE_SIZE_LIMIT') });

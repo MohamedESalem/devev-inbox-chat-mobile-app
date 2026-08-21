@@ -138,7 +138,7 @@ export const getLastEmailInSelectedChat = createDraftSafeSelector(
   ],
   conversation => {
     if (!conversation) {
-      return [];
+      return undefined;
     }
     const lastEmail = [...conversation.messages].reverse().find(message => {
       const { contentAttributes = {}, messageType } = message;

@@ -15,7 +15,6 @@ import { useAppDispatch, useAppSelector } from '@/hooks';
 import { selectQuoteMessage, setQuoteMessage } from '@/store/conversation/sendMessageSlice';
 
 import { VideoBubblePlayer } from '../message-components';
-import { Message } from '@/types';
 
 const AudioIcon = () => {
   return (
@@ -87,7 +86,7 @@ export const QuoteReply = () => {
 
   const handleScrollToMessage = useCallback(() => {
     const messageIndex = messageListRef.current?.props.data?.findIndex(
-      (item: Message) => item.id === quoteMessage?.id,
+      item => !('date' in item) && item.id === quoteMessage?.id,
     );
     const shouldScrollToMessage = messageIndex !== -1 && messageIndex !== undefined;
 
