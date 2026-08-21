@@ -27,9 +27,21 @@ export const EmailBubble = (props: EmailBubbleProps) => {
   const formattedEmail = emailBody.content.replace('height:100%;', '');
 
   const baseStyle = `
+        html, body {
+          margin: 0;
+          padding: 0;
+          overflow-wrap: anywhere;
+        }
         * {
           font-family: system,-apple-system,".SFNSText-Regular","San Francisco",Roboto,"Segoe UI","Helvetica Neue","Lucida Grande",sans-serif;
           font-size: 16px;
+          line-height: 1.45;
+        }
+        p {
+          margin: 0 0 14px !important;
+        }
+        p:last-child {
+          margin-bottom: 0 !important;
         }
         img{
           max-width: 100% !important;
