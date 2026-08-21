@@ -36,6 +36,7 @@ export const conversation: Conversation = {
       createdAt: 1,
       identifier: null,
       lastActivityAt: 1,
+      type: 'contact',
     },
     assignee: {
       id: 1,

@@ -85,6 +85,12 @@ export interface MessagesResponse {
   conversationId: number;
 }
 
+export interface MessageFile {
+  uri: string;
+  type?: string;
+  fileName?: string;
+}
+
 export interface SendMessagePayload {
   conversationId: number;
   message: string;
@@ -93,7 +99,7 @@ export interface SendMessagePayload {
     id: number;
     thumbnail?: string;
   };
-  file?: File;
+  file?: MessageFile;
   contentAttributes?: {
     inReplyTo: number;
   };

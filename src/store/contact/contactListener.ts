@@ -25,7 +25,7 @@ contactListenerMiddleware.startListening({
 contactListenerMiddleware.startListening({
   actionCreator: conversationActions.fetchConversation.fulfilled,
   effect: (action, listenerApi) => {
-    const conversation = action.payload as Conversation;
+    const { conversation } = action.payload;
     const contact = conversation?.meta?.sender;
     if (contact) {
       listenerApi.dispatch(addContact(contact));

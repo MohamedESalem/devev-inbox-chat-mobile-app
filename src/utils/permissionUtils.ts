@@ -4,13 +4,16 @@ import { Account } from '@/types/Account';
 
 export const getCurrentAccount = (
   user: User | null = null,
-  accountId: number | null = null,
+  accountId: number | null | undefined = null,
 ): Account | undefined => {
   const accounts = user?.accounts || [];
   return accounts.find(account => Number(account.id) === Number(accountId));
 };
 
-export const getUserPermissions = (user: User | null, accountId: number | null): string[] => {
+export const getUserPermissions = (
+  user: User | null,
+  accountId: number | null | undefined,
+): string[] => {
   try {
     const currentAccount = getCurrentAccount(user, accountId) || {};
     return (currentAccount as Account).permissions || [];

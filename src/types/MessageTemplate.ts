@@ -11,6 +11,8 @@ export type {
   WhatsAppTemplateComponent,
   WhatsAppMessageTemplate,
   TemplateButtonParam,
+  TwilioProcessedParams,
+  WhatsAppProcessedParams,
 } from '@chatwoot/utils';
 
 // The mobile app camelCases API responses, so Twilio content templates arrive

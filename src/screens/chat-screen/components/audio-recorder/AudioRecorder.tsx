@@ -22,6 +22,7 @@ import {
 } from '@/store/conversation/localRecordedAudioCacheSlice';
 // eslint-disable-next-line import/no-unresolved
 import { convertAacToWav } from '@/utils/audioConverter';
+import type { MessageFile } from '@/store/conversation/conversationTypes';
 
 const RecorderSegmentWidth = Dimensions.get('screen').width - 8 - 80 - 12;
 
@@ -64,7 +65,7 @@ export const AudioRecorder = ({
   onRecordingComplete,
   audioFormat,
 }: {
-  onRecordingComplete: (audioFile: File) => void;
+  onRecordingComplete: (audioFile: MessageFile) => void;
   audioFormat: 'audio/m4a' | 'audio/wav';
 }) => {
   const localRecordedAudioCacheFilePaths = useAppSelector(selectLocalRecordedAudioCacheFilePaths);
@@ -189,7 +190,7 @@ export const AudioRecorder = ({
           const audioFile = await createAudioFile(value);
           dispatch(addNewCachePath(audioFile.originalPath));
           setIsVoiceRecorderOpen(false);
-          onRecordingComplete(audioFile as unknown as File);
+          onRecordingComplete(audioFile);
         } catch (error) {
           Sentry.captureException(error);
           Alert.alert(
