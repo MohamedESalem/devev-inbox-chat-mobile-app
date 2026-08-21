@@ -61,7 +61,7 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          pnpm test -- --maxWorkers=2 2>&1 | tee /tmp/devev-jest-output.log
+          pnpm exec jest --maxWorkers=2 2>&1 | tee /tmp/devev-jest-output.log
 
       - name: Publish test failure summary
         if: ${{ failure() && steps.tests.outcome == 'failure' }}
