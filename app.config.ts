@@ -1,5 +1,5 @@
 import { ConfigContext, ExpoConfig } from 'expo/config';
-import { DEVEV_CONFIG } from './src/config/devev';
+import { DEVEV_CONFIG } from './devev.config';
 
 export default ({ config }: ConfigContext): ExpoConfig => {
   return {

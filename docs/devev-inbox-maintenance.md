@@ -29,7 +29,7 @@ The following references are intentionally preserved because they are compatibil
 
 ## Configuration Locations
 
-- Product/server/brand constants: `src/config/devev.ts`.
+- Product/server/brand constants: `devev.config.js`; typed app helpers: `src/config/devev.ts`.
 - Expo app identity and deep links: `app.config.ts`.
 - EAS profiles: `eas.json`.
 - Public env examples: `.env.example`.
