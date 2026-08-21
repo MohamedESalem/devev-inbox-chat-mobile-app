@@ -12,6 +12,7 @@ const markdownItInstance = MarkdownIt({ linkify: true, typographer: true });
 type MarkdownBubbleProps = {
   messageContent: string;
   variant: string;
+  paragraphSpacing?: number;
 };
 
 const variantTextMap = {
@@ -25,7 +26,7 @@ const variantTextMap = {
 };
 
 export const MarkdownBubble = (props: MarkdownBubbleProps) => {
-  const { messageContent, variant } = props;
+  const { messageContent, variant, paragraphSpacing = 0 } = props;
   const handleURL = (url: string) => {
     openURL({ URL: url });
     return true;
@@ -49,7 +50,7 @@ export const MarkdownBubble = (props: MarkdownBubbleProps) => {
     },
     paragraph: {
       marginTop: 0,
-      marginBottom: 0,
+      marginBottom: paragraphSpacing,
       fontFamily: 'Inter-400-20',
     },
     bullet_list: {

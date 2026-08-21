@@ -54,11 +54,13 @@ describe('getRenderableEmailBody', () => {
     });
   });
 
-  it('uses Markdown only when the message has no structured email body', () => {
-    const message = buildMessage({ content: '**Fallback**' });
+  it('preserves Markdown paragraph boundaries when no structured email body exists', () => {
+    const content =
+      '**Welcome to Essam Salem Law Firm**\n\nThank you for contacting us.\n\nSecond paragraph.';
+    const message = buildMessage({ content });
 
     expect(getRenderableEmailBody(message)).toEqual({
-      content: '**Fallback**',
+      content,
       format: 'markdown',
     });
   });

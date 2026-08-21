@@ -37,10 +37,10 @@ export const EmailBubble = (props: EmailBubbleProps) => {
           font-size: 16px;
           line-height: 1.45;
         }
-        p {
+        html body p {
           margin: 0 0 14px !important;
         }
-        p:last-child {
+        html body p:last-child {
           margin-bottom: 0 !important;
         }
         img{
@@ -64,7 +64,11 @@ export const EmailBubble = (props: EmailBubbleProps) => {
       <Animated.View style={[tailwind.style('flex  w-full')]}>
         <Animated.View style={tailwind.style('w-full')}>
           {emailBody.format === 'markdown' ? (
-            <MarkdownBubble messageContent={emailBody.content} variant={props.variant} />
+            <MarkdownBubble
+              messageContent={emailBody.content}
+              variant={props.variant}
+              paragraphSpacing={14}
+            />
           ) : (
             <AutoHeightWebView
               style={{ width: '100%', minHeight: 1, minWidth: '100%' }}
