@@ -1,4 +1,4 @@
-export const convertOggToWav = async (oggUrl: string): Promise<string | Error> => {
+export const convertOggToWav = async (oggUrl: string): Promise<string> => {
   return '';
 };
 

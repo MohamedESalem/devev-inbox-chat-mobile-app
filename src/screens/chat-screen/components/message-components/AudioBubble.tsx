@@ -14,7 +14,14 @@ import { tailwind } from '@/theme';
 import { IconProps } from '@/types';
 import { Icon, Slider } from '@/components-next/common';
 import { Spinner } from '@/components-next/spinner';
-import { pausePlayer, resumePlayer, seekTo, startPlayer, stopPlayer } from '../audio-recorder';
+import {
+  pausePlayer,
+  resumePlayer,
+  seekTo,
+  startPlayer,
+  stopPlayer,
+  type Callback,
+} from '../audio-recorder';
 import { MESSAGE_VARIANTS } from '@/constants';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '@/hooks';
@@ -62,9 +69,9 @@ export const AudioBubblePlayer = React.memo((props: AudioPlayerProps) => {
   const currentPosition = useSharedValue(0);
   const totalDuration = useSharedValue(0);
 
-  const audioPlayBackStatus = useCallback(
-    (data: { data: PlayBackType }) => {
-      const playBackData = data.data as PlayBackType;
+  const audioPlayBackStatus: Callback = useCallback(
+    ({ data }) => {
+      const playBackData = data as PlayBackType | undefined;
       if (playBackData) {
         currentPosition.value = playBackData.currentPosition;
         totalDuration.value = playBackData.duration;

@@ -30,8 +30,9 @@ import { showToast } from '@/utils/toastUtils';
 import { findFileSize } from '@/utils/fileUtils';
 import { selectConversationById } from '@/store/conversation/conversationSelectors';
 import { selectInboxById } from '@/store/inbox/inboxSelectors';
+import type { AppDispatch } from '@/store';
 
-export const handleOpenPhotosLibrary = async dispatch => {
+export const handleOpenPhotosLibrary = async (dispatch: AppDispatch) => {
   const pickedAssets = await launchImageLibrary({
     quality: 1,
     selectionLimit: 4,
@@ -66,7 +67,7 @@ export const handleOpenPhotosLibrary = async dispatch => {
   }
 };
 
-const handleLaunchCamera = async dispatch => {
+const handleLaunchCamera = async (dispatch: AppDispatch) => {
   request(Platform.OS === 'ios' ? PERMISSIONS.IOS.CAMERA : PERMISSIONS.ANDROID.CAMERA).then(
     async result => {
       if (RESULTS.BLOCKED === result) {
@@ -125,7 +126,7 @@ const mapObject = (originalObject: DocumentPickerResponse): Asset[] => {
   ];
 };
 
-const handleAttachFile = async dispatch => {
+const handleAttachFile = async (dispatch: AppDispatch) => {
   try {
     const result = await pick({
       type: [
@@ -191,7 +192,7 @@ const TEMPLATES_MENU_OPTION = {
   handlePress: () => {},
 };
 
-export const validateFileAndSetAttachments = async (dispatch, attachment) => {
+export const validateFileAndSetAttachments = async (dispatch: AppDispatch, attachment: Asset) => {
   const { fileSize } = attachment;
   if (findFileSize(fileSize) <= MAXIMUM_FILE_UPLOAD_SIZE) {
     dispatch(updateAttachments([attachment]));
