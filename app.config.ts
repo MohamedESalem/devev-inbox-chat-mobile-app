@@ -26,7 +26,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         ITSAppUsesNonExemptEncryption: false,
       },
       // Please use the relative path to the GoogleService-Info.plist file
-      googleServicesFile: process.env.EXPO_PUBLIC_IOS_GOOGLE_SERVICES_FILE,
+      googleServicesFile:
+        process.env.EXPO_PUBLIC_IOS_GOOGLE_SERVICES_FILE || './GoogleService-Info.plist',
       entitlements: { 'aps-environment': 'production' },
       associatedDomains: [`applinks:${DEVEV_CONFIG.SERVER_HOST}`],
     },
@@ -42,7 +43,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         'android.permission.POST_NOTIFICATIONS',
       ],
       // Please use the relative path to the google-services.json file
-      googleServicesFile: process.env.EXPO_PUBLIC_ANDROID_GOOGLE_SERVICES_FILE,
+      googleServicesFile:
+        process.env.EXPO_PUBLIC_ANDROID_GOOGLE_SERVICES_FILE || './google-services.json',
       intentFilters: [
         {
           action: 'VIEW',

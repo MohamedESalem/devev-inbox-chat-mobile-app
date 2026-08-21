@@ -1,0 +1,32 @@
+# Dependencies and generated output
+node_modules/
+.expo/
+dist/
+web-build/
+ios/
+android/
+
+# Local and platform credentials
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.pem
+.env
+.env.local
+.env*.local
+
+# Local-only files
+.metro-health-check*
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+.DS_Store
+some data about Devev/
+*.tsbuildinfo
+
+# CI reconstructs the platform Firebase file immediately before EAS upload.
+!google-services.json
+!GoogleService-Info.plist
