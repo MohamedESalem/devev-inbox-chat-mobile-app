@@ -81,7 +81,23 @@ jobs:
         run: pnpm run audit:secrets
 
       - name: Resolve Expo config
-        run: pnpm exec expo config --type public > /tmp/devev-expo-config.json
+        id: expo-config
+        shell: bash
+        run: |
+          pnpm exec expo config --type public \
+            > /tmp/devev-expo-config.json \
+            2> /tmp/devev-expo-config-error.log
+
+      - name: Publish Expo config failure summary
+        if: ${{ failure() && steps.expo-config.outcome == 'failure' }}
+        shell: bash
+        run: |
+          {
+            echo '### Expo config failure'
+            echo '```text'
+            tail -n 200 /tmp/devev-expo-config-error.log
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
 
   eas-build:
     name: Trigger EAS Build
