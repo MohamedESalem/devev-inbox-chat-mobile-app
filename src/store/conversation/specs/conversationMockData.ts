@@ -52,6 +52,7 @@ export const conversation: Conversation = {
   timestamp: 1,
   slaPolicyId: null,
   appliedSla: null,
+  slaEvents: [],
 };
 
 export const conversationListResponse: ConversationListAPIResponse = {
