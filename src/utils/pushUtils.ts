@@ -1,7 +1,11 @@
 import { Platform } from 'react-native';
 import { NOTIFICATION_TYPES } from '@/constants';
 import { Notification } from '@/types/Notification';
-import { DEVEV_INSTALLATION, isDevevInstallationUrl, isServerOverrideEnabled } from '@/config/devev';
+import {
+  DEVEV_INSTALLATION,
+  isDevevInstallationUrl,
+  isServerOverrideEnabled,
+} from '@/config/devev';
 
 let notifee: typeof import('@notifee/react-native').default | undefined;
 

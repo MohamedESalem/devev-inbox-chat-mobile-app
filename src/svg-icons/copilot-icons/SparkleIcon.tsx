@@ -71,7 +71,10 @@ export const SparkleIcon = ({
   );
 };
 
-export const AnimatedSparkleIcon = ({ smallStarStyle, largeStarStyle }: AnimatedSparkleIconProps): JSX.Element => {
+export const AnimatedSparkleIcon = ({
+  smallStarStyle,
+  largeStarStyle,
+}: AnimatedSparkleIconProps): JSX.Element => {
   return (
     <View style={{ width: 24, height: 24 }}>
       {/* Large star layer */}

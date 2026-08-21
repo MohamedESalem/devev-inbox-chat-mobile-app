@@ -108,7 +108,9 @@ describe('messageVariableUtils', () => {
     it('should convert camelCase contact custom attribute keys to snake_case', () => {
       const conversation = buildConversation();
       // Override sender customAttributes
-      (conversation.meta.sender as { customAttributes: Record<string, string> }).customAttributes = {
+      (
+        conversation.meta.sender as { customAttributes: Record<string, string> }
+      ).customAttributes = {
         userName: 'testuser',
         accountType: 'business',
       };
@@ -132,7 +134,9 @@ describe('messageVariableUtils', () => {
       const conversation = buildConversation({
         customAttributes: { addressLine1: '123 Main St', field2Value: 'test' },
       });
-      (conversation.meta.sender as { customAttributes: Record<string, string> }).customAttributes = {
+      (
+        conversation.meta.sender as { customAttributes: Record<string, string> }
+      ).customAttributes = {
         phone2Type: 'mobile',
         line1Address: 'home',
       };
