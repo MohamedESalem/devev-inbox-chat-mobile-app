@@ -1,4 +1,4 @@
-import { Falsy, PressableStateCallbackType, StyleProp, StyleSheet, ViewStyle } from 'react-native';
+import { PressableStateCallbackType, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 
 /**
  * "If the type of the value is a function, then return true, otherwise return false."
@@ -31,8 +31,8 @@ function runIfFn<T, U>(valueOrFn: T | ((...fnArgs: U[]) => T), ...args: U[]): T 
 export const styleAdapter = (
   style: StyleProp<ViewStyle> | ((state: PressableStateCallbackType) => StyleProp<ViewStyle>),
   touchState?: PressableStateCallbackType,
-): ViewStyle | Falsy | number => {
+): StyleProp<ViewStyle> => {
   const _style = touchState ? runIfFn(style, touchState) : style;
   const __style = !Array.isArray(_style) ? _style : StyleSheet.flatten(_style);
-  return __style as ViewStyle | Falsy | number;
+  return __style as StyleProp<ViewStyle>;
 };

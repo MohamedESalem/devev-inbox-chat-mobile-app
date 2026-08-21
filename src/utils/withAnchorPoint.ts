@@ -17,42 +17,38 @@ const isValidSize = (size: Size): boolean => {
 
 const defaultAnchorPoint = { x: 0.5, y: 0.5 };
 
+type TransformArray = Exclude<NonNullable<TransformsStyle['transform']>, string>;
+type TransformEntry = TransformArray[number];
+
 export const withAnchorPoint = (transform: TransformsStyle, anchorPoint: Point, size: Size) => {
   'worklet';
   if (!isValidSize(size)) {
     return transform;
   }
 
-  let injectedTransform = transform.transform;
-  if (!injectedTransform) {
+  const existingTransform = transform.transform;
+  if (!Array.isArray(existingTransform)) {
     return transform;
   }
 
-  if (anchorPoint.x !== defaultAnchorPoint.x && size.width) {
-    const shiftTranslateX = [];
+  const injectedTransform = [...(existingTransform as TransformArray)] as TransformEntry[];
 
+  if (anchorPoint.x !== defaultAnchorPoint.x && size.width) {
     // shift before rotation
-    shiftTranslateX.push({
+    injectedTransform.unshift({
       translateX: size.width * (anchorPoint.x - defaultAnchorPoint.x),
     });
-    injectedTransform = [...shiftTranslateX, ...injectedTransform];
     // shift after rotation
     injectedTransform.push({
       translateX: size.width * (defaultAnchorPoint.x - anchorPoint.x),
     });
   }
 
-  if (!Array.isArray(injectedTransform)) {
-    return { transform: injectedTransform };
-  }
-
   if (anchorPoint.y !== defaultAnchorPoint.y && size.height) {
-    const shiftTranslateY = [];
     // shift before rotation
-    shiftTranslateY.push({
+    injectedTransform.unshift({
       translateY: size.height * (anchorPoint.y - defaultAnchorPoint.y),
     });
-    injectedTransform = [...shiftTranslateY, ...injectedTransform];
     // shift after rotation
     injectedTransform.push({
       translateY: size.height * (defaultAnchorPoint.y - anchorPoint.y),
