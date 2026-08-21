@@ -1,12 +1,5 @@
 import React, { FC, useCallback, useEffect, useMemo } from 'react';
-import {
-  BlurEvent,
-  FocusEvent,
-  Platform,
-  Pressable,
-  StyleSheet,
-  ScrollView,
-} from 'react-native';
+import { BlurEvent, FocusEvent, Platform, Pressable, StyleSheet, ScrollView } from 'react-native';
 import Animated, {
   LayoutAnimationConfig,
   LinearTransition,
