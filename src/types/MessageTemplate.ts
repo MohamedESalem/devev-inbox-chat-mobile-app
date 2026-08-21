@@ -1,19 +1,16 @@
-// Raw template + processed_params types come from the shared @chatwoot/utils
-// package. The normalized model and form state below are mobile-specific.
-export type {
-  WhatsAppTemplateHeaderFormat,
-  WhatsAppTemplateButton,
-  WhatsAppTemplateComponent,
-  WhatsAppMessageTemplate,
-  TemplateButtonParam,
-  WhatsAppProcessedParams,
-  TwilioProcessedParams,
-} from '@chatwoot/utils';
-
 import type {
   WhatsAppTemplateHeaderFormat,
   WhatsAppProcessedParams,
   TwilioProcessedParams,
+} from '@chatwoot/utils';
+
+// Raw template + processed_params types come from the shared @chatwoot/utils
+// package. The normalized model and form state below are mobile-specific.
+export type {
+  WhatsAppTemplateButton,
+  WhatsAppTemplateComponent,
+  WhatsAppMessageTemplate,
+  TemplateButtonParam,
 } from '@chatwoot/utils';
 
 // The mobile app camelCases API responses, so Twilio content templates arrive

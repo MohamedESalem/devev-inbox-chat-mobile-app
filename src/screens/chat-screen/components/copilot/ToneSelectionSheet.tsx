@@ -66,3 +66,5 @@ export const ToneSelectionSheet = forwardRef<SheetRef, ToneSelectionSheetProps>(
     );
   },
 );
+
+ToneSelectionSheet.displayName = 'ToneSelectionSheet';

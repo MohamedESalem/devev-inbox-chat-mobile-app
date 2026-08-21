@@ -3,9 +3,9 @@ import { isDevevDeepLink, isDevevInstallationUrl } from '../devev';
 describe('DEVEV configuration guards', () => {
   it('accepts the production HTTPS host', () => {
     expect(isDevevInstallationUrl('https://chat.inbox.devev.net')).toBe(true);
-    expect(
-      isDevevDeepLink('https://chat.inbox.devev.net/app/accounts/1/conversations/2'),
-    ).toBe(true);
+    expect(isDevevDeepLink('https://chat.inbox.devev.net/app/accounts/1/conversations/2')).toBe(
+      true,
+    );
   });
 
   it('rejects unsupported hosts and schemes', () => {

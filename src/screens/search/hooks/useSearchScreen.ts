@@ -61,7 +61,7 @@ export function useSearchScreen() {
   }, [accountId]);
 
   const debouncedSearchRef = useRef<ReturnType<typeof debounce> | null>(null);
-  const inFlightSearchesRef = useRef<Array<{ abort: () => void }>>([]);
+  const inFlightSearchesRef = useRef<{ abort: () => void }[]>([]);
 
   const cancelInFlightSearches = useCallback(() => {
     inFlightSearchesRef.current.forEach(promise => promise.abort());
@@ -100,7 +100,7 @@ export function useSearchScreen() {
         debouncedSearchRef.current.cancel();
       }
     };
-  }, [dispatch, accountId]);
+  }, [dispatch, accountId, cancelInFlightSearches]);
 
   const handleSearchChange = useCallback(
     (text: string) => {
@@ -170,7 +170,7 @@ export function useSearchScreen() {
       });
       setExpandedSections(newExpanded);
     },
-    [dispatch, accountId],
+    [dispatch, accountId, cancelInFlightSearches],
   );
 
   const handleClearRecentSearches = useCallback(async () => {
@@ -327,7 +327,7 @@ export function useSearchScreen() {
         handleLoadMore(sectionId);
       };
     },
-    [handleLoadMore, sectionData, searchText, query],
+    [handleLoadMore, sectionData, query],
   );
 
   const getItemsToShow = useCallback(
@@ -365,7 +365,7 @@ export function useSearchScreen() {
         return () => clearTimeout(timer);
       }
     }
-  }, [activeTab]);
+  }, [activeTab, listRefs]);
 
   return {
     searchText,
